@@ -221,16 +221,18 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
                 </button>
               </div>
 
-              <div className="charge-fixe-row-details">
-                <input
-                  type="number"
-                  inputMode="decimal"
-                  placeholder="0"
-                  value={item.montant}
-                  ref={(el) => { montantRefs.current[item.id] = el }}
-                  onChange={(e) => modifier(item.id, 'montant', e.target.value)}
-                />
-                <span className="unit">€</span>
+              <div className="charge-fixe-montant-row">
+                <div className="charge-fixe-montant-champ">
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    placeholder="0"
+                    value={item.montant}
+                    ref={(el) => { montantRefs.current[item.id] = el }}
+                    onChange={(e) => modifier(item.id, 'montant', e.target.value)}
+                  />
+                  <span className="unit">€</span>
+                </div>
 
                 <select
                   value={item.frequence}
@@ -268,7 +270,7 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
                 </div>
               )}
 
-              <div className="charge-fixe-row-details">
+              <div className="charge-fixe-row-details charge-fixe-row-jour">
                 <label className="jour-prelevement">
                   Le
                   <input
@@ -287,9 +289,12 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
                   className={`toggle-preleve ${preleveCeMois ? 'on' : ''}`}
                   disabled={pasMensuelle && !due}
                   onClick={() => basculerPreleve(item)}
+                  aria-label={preleveCeMois ? 'Prélevée' : 'À venir'}
                 >
                   <Icon name={preleveCeMois ? 'check_circle' : 'radio_button_unchecked'} />
-                  {preleveCeMois ? 'Prélevée' : 'À venir'}
+                  <span className="toggle-preleve-label">
+                    {preleveCeMois ? 'Prélevée' : 'À venir'}
+                  </span>
                 </button>
               </div>
 

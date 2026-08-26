@@ -11,6 +11,10 @@
 .icon {
   font-size: 20px;
   line-height: 1;
+  display: inline-block;
+  width: 1em;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 *:focus-visible {
@@ -699,11 +703,60 @@ input[type="number"] {
 
 .charge-fixe-row-details input[type="number"] {
   width: 112px;
+  flex-shrink: 0;
 }
 
-.charge-fixe-row-details select {
-  flex: 1;
-  min-width: 120px;
+/* Jour de prélèvement + statut : jamais sur deux lignes, le libellé
+   "Le jj du mois" ne prend jamais toute la largeur d'une carte. */
+.charge-fixe-row-jour {
+  flex-wrap: nowrap;
+}
+
+/* Sur mobile (carte en une seule colonne), "Le jj du mois" + le texte du
+   bouton ne tiennent pas toujours sur une ligne : le bouton passe en
+   icône seule, comme dans le journal des charges variables. */
+@media (max-width: 480px) {
+  .charge-fixe-row-jour .toggle-preleve {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .charge-fixe-row-jour .toggle-preleve-label {
+    display: none;
+  }
+  .jour-prelevement input {
+    width: 44px;
+  }
+}
+
+/* Montant + fréquence : grille à 2 colonnes pour garantir qu'ils tiennent
+   toujours sur une seule ligne, même sur mobile avec une échelle de
+   police système agrandie (le select rétrécit plutôt que de passer
+   à la ligne suivante). */
+.charge-fixe-montant-row {
+  display: grid;
+  grid-template-columns: minmax(84px, 112px) 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.charge-fixe-montant-champ {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.charge-fixe-montant-champ input {
+  width: 100%;
+  min-width: 0;
+}
+
+.charge-fixe-montant-row select {
+  width: 100%;
+  min-width: 0;
   font-family: var(--font-body);
 }
 
