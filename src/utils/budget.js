@@ -1,7 +1,7 @@
 export const CATEGORIES_CHARGES_FIXES = [
   {
     id: 'Abonnements',
-    icon: 'card_membership',
+    icon: 'devices',
     color: '#4a3aa7',
     colorDark: '#9085e9',
     presets: [
