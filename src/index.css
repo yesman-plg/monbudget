@@ -27,7 +27,7 @@
 
   --font-display: 'Fraunces', ui-serif, Georgia, serif;
   --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-mono: 'Source Code Pro', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   font-family: var(--font-body);
 }
