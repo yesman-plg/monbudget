@@ -229,6 +229,7 @@
 .step-indicator-item {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   white-space: nowrap;
   background: none;
@@ -241,6 +242,8 @@
   color: var(--text-secondary);
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
+  flex: 1;
+  min-width: 0;
 }
 
 .step-indicator-icon {
