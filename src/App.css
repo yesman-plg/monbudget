@@ -141,16 +141,24 @@
 /* --- En-tête --- */
 
 .app-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
   margin: 0 0 28px;
 }
 
 .app-header-spacer {
-  width: 36px;
-  flex-shrink: 0;
+  min-width: 0;
+}
+
+.app-header .periode-switcher {
+  justify-self: center;
+  min-width: 0;
+}
+
+.app-header .btn-compte {
+  justify-self: end;
 }
 
 .periode-switcher {
