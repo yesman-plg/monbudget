@@ -1,16 +1,41 @@
-# React + Vite
+# Mon budget mensuel
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Application web de gestion de budget personnel — revenus, charges fixes, charges variables, résumé et analyse financière, mois par mois.
 
-Currently, two official plugins are available:
+🔗 **En ligne :** https://yesman-plg.github.io/monbudget/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Fonctionnalités
 
-## React Compiler
+- **Revenus** — liste libre avec suggestions rapides (salaire, primes, freelance...).
+- **Charges fixes** — 16 catégories (Logement, Énergie, Assurances, Crédits...), chacune avec ses propres suggestions. Fréquence mensuelle, trimestrielle ou annuelle : une charge non mensuelle précise son **mois de prélèvement** et ne compte dans le total que le(s) mois où elle tombe réellement. Statut *À venir / Prélevée* propre à chaque mois (ne se reporte pas d'un mois sur l'autre).
+- **Suivi de crédit** — pour la catégorie Crédits : durée (en mois) et nombre d'échéances remboursées, incrémenté automatiquement à chaque fois qu'on coche "Prélevée".
+- **Charges variables** — journal de dépenses daté (10 catégories), rempli au fil du mois. Chaque dépense reste rattachée au mois de sa propre date.
+- **Sélecteur de mois/année** en tête de page — référence pour tous les calculs "dû ce mois-ci". Les revenus et charges fixes sont partagés entre tous les mois ; le journal des charges variables et les statuts "prélevée" sont propres à chaque mois.
+- **Résumé** — tuiles de synthèse, répartition par catégorie, section **Analyse** (taux d'épargne, taux d'effort logement, règle 50/30/20, reste à vivre par jour, tendance vs mois précédent) et **comparaison entre deux mois**.
+- **Réinitialiser le mois** — vide le journal du mois affiché et repasse les charges fixes à "À venir", sans toucher aux autres mois.
+- **Compte Google + sauvegarde cloud** — connexion via Firebase Authentication, données stockées dans Firestore, isolées par utilisateur (chacun ne voit que les siennes). Migration automatique des données locales au premier login.
+- **Mode sombre** natif (suit les préférences système ou le thème forcé).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack technique
 
-## Expanding the Oxlint configuration
+- [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
+- [Firebase](https://firebase.google.com/) — Authentication (Google) + Firestore
+- Icônes [Material Symbols](https://fonts.google.com/icons) (Google)
+- Polices : [Fraunces](https://fonts.google.com/specimen/Fraunces) (titres), [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans) (interface), [Source Code Pro](https://fonts.google.com/specimen/Source+Code+Pro) (chiffres — auto-hébergée dans `public/fonts/` pour fiabilité de chargement)
+- Déploiement automatique sur [GitHub Pages](https://pages.github.com/) via GitHub Actions à chaque push sur `main`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Développement local
+
+```bash
+npm install
+npm run dev      # serveur de dev, http://localhost:5173/monbudget/
+npm run build    # build de production dans dist/
+```
+
+## Configuration Firebase
+
+La config dans `src/firebase.js` (clé API publique, sans risque) pointe vers le projet Firebase du site. La sécurité est assurée par les **règles Firestore** (`firestore.rules`, à publier depuis la console Firebase) : chaque utilisateur ne peut lire/écrire que son propre document `users/{uid}`.
+
+## Déploiement
+
+Tout push sur `main` déclenche `.github/workflows/deploy.yml` : build de l'app puis publication sur GitHub Pages. Le chemin de base (`/monbudget/`) est configuré dans `vite.config.js`.
