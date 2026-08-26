@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Icon from './Icon'
 import CategoryPicker from './CategoryPicker'
 import {
@@ -18,12 +18,16 @@ import {
  */
 export default function JournalDepenses({ items, onChange, dateReference = new Date() }) {
   const [categorieOuverte, setCategorieOuverte] = useState(null)
+  const [dernierAjoutId, setDernierAjoutId] = useState(null)
+  const labelRefs = useRef({})
+  const montantRefs = useRef({})
 
   function ajouter(categorie, label = '') {
+    const id = nouvelId()
     onChange([
       ...items,
       {
-        id: nouvelId(),
+        id,
         label,
         montant: '',
         date: dateParDefaut(dateReference),
@@ -31,7 +35,20 @@ export default function JournalDepenses({ items, onChange, dateReference = new D
         categorie,
       },
     ])
+    setDernierAjoutId(id)
   }
+
+  // Après ajout, on descend directement à la nouvelle carte et on pose le
+  // focus sur le champ à remplir (le libellé si vide, sinon le montant).
+  useEffect(() => {
+    if (!dernierAjoutId) return
+    const cible = labelRefs.current[dernierAjoutId]?.value
+      ? montantRefs.current[dernierAjoutId]
+      : labelRefs.current[dernierAjoutId]
+    cible?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    cible?.focus()
+    setDernierAjoutId(null)
+  }, [dernierAjoutId])
 
   function modifier(id, champ, valeur) {
     onChange(
@@ -132,6 +149,7 @@ export default function JournalDepenses({ items, onChange, dateReference = new D
                   type="text"
                   placeholder="Libellé"
                   value={item.label}
+                  ref={(el) => { labelRefs.current[item.id] = el }}
                   onChange={(e) => modifier(item.id, 'label', e.target.value)}
                 />
                 <button
@@ -156,6 +174,7 @@ export default function JournalDepenses({ items, onChange, dateReference = new D
                   inputMode="decimal"
                   placeholder="0"
                   value={item.montant}
+                  ref={(el) => { montantRefs.current[item.id] = el }}
                   onChange={(e) => modifier(item.id, 'montant', e.target.value)}
                 />
                 <span className="unit">€</span>

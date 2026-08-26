@@ -215,7 +215,7 @@ export default function StepResume({
 
         <div className="analyse-rows">
           <div className="analyse-row">
-            <Icon name="savings" className="analyse-row-icon" />
+            <Icon name="trending_up" className="analyse-row-icon" />
             <div className="analyse-row-body">
               <div className="analyse-row-top">
                 <span className="analyse-row-label">Taux d'épargne</span>
