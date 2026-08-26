@@ -1,0 +1,105 @@
+:root {
+  color-scheme: light;
+
+  /* Fond & surfaces — neutre chaud, papier plutôt que blanc pur */
+  --surface-page: #f5f3ee;
+  --surface-1: #ffffff;
+  --surface-2: #edeae1;
+
+  /* Encre — gris à léger biais chaud, jamais gris pur */
+  --text-primary: #1c1a16;
+  --text-secondary: #5c584f;
+  --text-muted: #8b877c;
+  --gridline: #e2ded2;
+  --border: rgba(28, 26, 22, 0.1);
+
+  /* Chrome — neutre graphite, la couleur reste réservée aux catégories */
+  --accent: #23262e;
+  --accent-hover: #34373f;
+  --accent-ink: #ffffff;
+
+  --status-good: #0ca30c;
+  --status-warning: #b3760a;
+  --status-critical: #c8372f;
+  --status-good-bg: #e6f4e1;
+  --status-warning-bg: #f8ecd7;
+  --status-critical-bg: #f8e4e0;
+
+  --font-display: 'Fraunces', ui-serif, Georgia, serif;
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  font-family: var(--font-body);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-page: #131319;
+    --surface-1: #1c1c24;
+    --surface-2: #24242e;
+
+    --text-primary: #f1efe8;
+    --text-secondary: #b8b4a8;
+    --text-muted: #837f74;
+    --gridline: #2f2f3a;
+    --border: rgba(241, 239, 232, 0.12);
+
+    --accent: #ece8dd;
+    --accent-hover: #d9d5c8;
+    --accent-ink: #17161c;
+
+    --status-good: #35c93f;
+    --status-warning: #f0b429;
+    --status-critical: #f0655c;
+    --status-good-bg: rgba(53, 201, 63, 0.14);
+    --status-warning-bg: rgba(240, 180, 41, 0.14);
+    --status-critical-bg: rgba(240, 101, 92, 0.14);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-page: #131319;
+  --surface-1: #1c1c24;
+  --surface-2: #24242e;
+
+  --text-primary: #f1efe8;
+  --text-secondary: #b8b4a8;
+  --text-muted: #837f74;
+  --gridline: #2f2f3a;
+  --border: rgba(241, 239, 232, 0.12);
+
+  --accent: #ece8dd;
+  --accent-hover: #d9d5c8;
+  --accent-ink: #17161c;
+
+  --status-good: #35c93f;
+  --status-warning: #f0b429;
+  --status-critical: #f0655c;
+  --status-good-bg: rgba(53, 201, 63, 0.14);
+  --status-warning-bg: rgba(240, 180, 41, 0.14);
+  --status-critical-bg: rgba(240, 101, 92, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+input,
+select,
+button {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.material-symbols-rounded {
+  font-variation-settings: 'opsz' 24, 'wght' 450, 'FILL' 0, 'GRAD' 0;
+}
