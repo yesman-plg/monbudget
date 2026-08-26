@@ -9,8 +9,6 @@ import StepResume from './StepResume'
 import { useCloudBudget } from '../hooks/useCloudBudget'
 import { estDansLaPeriode } from '../utils/budget'
 
-const NB_ETAPES = 4
-
 function periodeParDefaut() {
   const d = new Date()
   return { mois: d.getMonth() + 1, annee: d.getFullYear() }
@@ -36,14 +34,6 @@ export default function BudgetApp({ user, onDeconnecter }) {
   const { revenus, chargesFixes, chargesVariables } = data
   const periode = data.periode ?? periodeParDefaut()
   const dateReference = new Date(periode.annee, periode.mois - 1, 1)
-
-  function suivant() {
-    setEtape((e) => Math.min(e + 1, NB_ETAPES - 1))
-  }
-
-  function precedent() {
-    setEtape((e) => Math.max(e - 1, 0))
-  }
 
   function allerA(index) {
     setEtape(index)
@@ -114,27 +104,6 @@ export default function BudgetApp({ user, onDeconnecter }) {
           />
         )}
       </main>
-
-      <footer className="app-nav">
-        <button
-          type="button"
-          className="btn-secondary"
-          onClick={precedent}
-          disabled={etape === 0}
-        >
-          <Icon name="arrow_back" />
-          Précédent
-        </button>
-        <button
-          type="button"
-          className="btn-primary"
-          onClick={suivant}
-          disabled={etape === NB_ETAPES - 1}
-        >
-          Suivant
-          <Icon name="arrow_forward" />
-        </button>
-      </footer>
     </div>
   )
 }

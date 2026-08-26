@@ -1,7 +1,7 @@
 .app {
   max-width: 680px;
   margin: 0 auto;
-  padding: 32px 20px 110px;
+  padding: 32px 20px 48px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -1213,72 +1213,6 @@ input[type="number"] {
   color: var(--text-muted);
   max-width: 400px;
   margin: 0;
-}
-
-/* --- Navigation bas de page --- */
-
-.app-nav {
-  position: sticky;
-  bottom: 0;
-  background: var(--surface-page);
-  padding: 18px 0;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: auto;
-  border-top: 1px solid var(--gridline);
-}
-
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  font-family: var(--font-body);
-  border: 1px solid var(--gridline);
-  background: var(--surface-1);
-  color: var(--text-primary);
-  flex: 1;
-  min-width: 0;
-}
-
-.btn-secondary .icon {
-  font-size: 18px;
-}
-
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 12px 22px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  font-family: var(--font-body);
-  border: none;
-  background: var(--accent);
-  color: var(--accent-ink);
-  flex: 1;
-  min-width: 0;
-}
-
-.btn-primary .icon {
-  font-size: 18px;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: var(--accent-hover);
-}
-
-.btn-primary:disabled,
-.app-nav .btn-secondary:disabled {
-  opacity: 0.4;
-  cursor: default;
 }
 
 @media (max-width: 420px) {
