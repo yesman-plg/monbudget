@@ -745,6 +745,58 @@ input[type="number"] {
   color: var(--text-muted);
 }
 
+/* Suivi d'un crédit : durée + échéances */
+
+.duree-credit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.duree-credit input {
+  width: 56px;
+  padding: 8px;
+  text-align: center;
+}
+
+.credit-progress {
+  padding-left: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.credit-progress-track {
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.credit-progress-fill {
+  height: 100%;
+  background: var(--chip-color);
+  border-radius: 3px;
+  transition: width 0.2s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .credit-progress-fill {
+    background: var(--chip-color-dark);
+  }
+}
+:root[data-theme="dark"] .credit-progress-fill {
+  background: var(--chip-color-dark);
+}
+
+.credit-progress-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
 .toggle-preleve {
   display: inline-flex;
   align-items: center;

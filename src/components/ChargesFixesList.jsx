@@ -40,6 +40,8 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
         jourPrelevement: '',
         moisPrelevement: '',
         preleve: false,
+        dureeMois: '',
+        echeancesPassees: 0,
       },
     ])
     setDernierAjoutId(id)
@@ -80,6 +82,26 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
 
   function supprimer(id) {
     onChange(items.filter((item) => item.id !== id))
+  }
+
+  // Pour un crédit, valider "Prélevée" avance automatiquement le compteur
+  // d'échéances (et le recule si on annule) — un seul update atomique.
+  function basculerPreleve(item) {
+    const nouveauPreleve = !item.preleve
+    onChange(
+      items.map((i) => {
+        if (i.id !== item.id) return i
+        if (i.categorie !== 'Crédits') return { ...i, preleve: nouveauPreleve }
+        const actuel = Number(i.echeancesPassees) || 0
+        const duree = i.dureeMois ? Number(i.dureeMois) : null
+        const suivant = nouveauPreleve
+          ? duree
+            ? Math.min(actuel + 1, duree)
+            : actuel + 1
+          : Math.max(actuel - 1, 0)
+        return { ...i, preleve: nouveauPreleve, echeancesPassees: suivant }
+      })
+    )
   }
 
   const itemsDus = items.filter((i) => estDueCeMois(i, dateReference))
@@ -248,12 +270,56 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
                   type="button"
                   className={`toggle-preleve ${item.preleve ? 'on' : ''}`}
                   disabled={pasMensuelle && !due}
-                  onClick={() => modifier(item.id, 'preleve', !item.preleve)}
+                  onClick={() => basculerPreleve(item)}
                 >
                   <Icon name={item.preleve ? 'check_circle' : 'radio_button_unchecked'} />
                   {item.preleve ? 'Prélevée' : 'À venir'}
                 </button>
               </div>
+
+              {item.categorie === 'Crédits' && (
+                <>
+                  <div className="charge-fixe-row-details">
+                    <label className="duree-credit">
+                      Durée
+                      <input
+                        type="number"
+                        min="1"
+                        placeholder="—"
+                        value={item.dureeMois ?? ''}
+                        onChange={(e) => modifier(item.id, 'dureeMois', e.target.value)}
+                      />
+                      mois
+                    </label>
+                    <label className="duree-credit">
+                      Échéances
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        value={item.echeancesPassees ?? ''}
+                        onChange={(e) => modifier(item.id, 'echeancesPassees', e.target.value)}
+                      />
+                      {item.dureeMois ? `/ ${item.dureeMois}` : ''}
+                    </label>
+                  </div>
+                  {item.dureeMois > 0 && (
+                    <div className="credit-progress">
+                      <div className="credit-progress-track">
+                        <div
+                          className="credit-progress-fill"
+                          style={{
+                            width: `${Math.min(100, ((Number(item.echeancesPassees) || 0) / Number(item.dureeMois)) * 100)}%`,
+                          }}
+                        />
+                      </div>
+                      <span className="credit-progress-label">
+                        {item.echeancesPassees || 0} / {item.dureeMois} échéances remboursées
+                      </span>
+                    </div>
+                  )}
+                </>
+              )}
 
               {pasMensuelle && !due && (
                 <div className="charge-fixe-prorata">Ne tombe pas ce mois-ci</div>
