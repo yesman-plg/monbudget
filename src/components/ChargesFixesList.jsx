@@ -126,6 +126,13 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
     items.filter((i) => i.categorie === categorieOuverte).map((i) => i.label)
   )
 
+  // Les cartes de la même catégorie se retrouvent groupées ensemble
+  // (tri stable : dans une même catégorie, l'ordre d'ajout est conservé).
+  const ordreCategories = CATEGORIES_CHARGES_FIXES.map((c) => c.id)
+  const itemsTries = [...items].sort(
+    (a, b) => ordreCategories.indexOf(a.categorie) - ordreCategories.indexOf(b.categorie)
+  )
+
   return (
     <div className="item-list">
       {items.length > 0 && (
@@ -182,7 +189,7 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
       )}
 
       <div className="charges-grid">
-        {items.map((item) => {
+        {itemsTries.map((item) => {
           const cat = categorieInfo(item.categorie)
           const pasMensuelle = item.frequence !== 'mensuel'
           const due = estDueCeMois(item, dateReference)
