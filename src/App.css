@@ -694,7 +694,7 @@ input[type="number"] {
 }
 
 .charge-fixe-row-details {
-  padding-left: 44px;
+  justify-content: center;
 }
 
 .charge-fixe-row-details input[type="number"] {
@@ -711,7 +711,7 @@ input[type="number"] {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--text-muted);
-  padding-left: 44px;
+  text-align: center;
 }
 
 .jour-prelevement {
@@ -762,13 +762,14 @@ input[type="number"] {
 }
 
 .credit-progress {
-  padding-left: 44px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
 }
 
 .credit-progress-track {
+  width: 100%;
   height: 6px;
   background: var(--surface-2);
   border-radius: 3px;
@@ -810,7 +811,6 @@ input[type="number"] {
   font-weight: 600;
   font-family: var(--font-body);
   cursor: pointer;
-  margin-left: auto;
 }
 
 .toggle-preleve .icon {
