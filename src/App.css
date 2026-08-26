@@ -1110,6 +1110,50 @@ input[type="number"] {
   background: var(--status-warning-bg);
 }
 
+/* Comparaison de deux mois */
+
+.comparaison-periodes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.comparaison-vs-icon {
+  color: var(--text-muted);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.comparaison-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.comparaison-delta .icon {
+  font-size: 16px;
+}
+
+.comparaison-delta-bon {
+  color: var(--status-good);
+}
+
+.comparaison-delta-mauvais {
+  color: var(--status-critical);
+}
+
+.comparaison-delta-neutre {
+  color: var(--text-secondary);
+}
+
 /* Règle 50/30/20 */
 
 .regle-bar {

@@ -1,4 +1,5 @@
 import Icon from './Icon'
+import ComparaisonMois from './ComparaisonMois'
 import {
   CATEGORIES_CHARGES_FIXES,
   CATEGORIES_CHARGES_VARIABLES,
@@ -313,6 +314,13 @@ export default function StepResume({
           </div>
         </div>
       </div>
+
+      <ComparaisonMois
+        revenus={revenus}
+        chargesFixes={chargesFixes}
+        chargesVariables={chargesVariables}
+        periodeInitiale={periode ?? { mois: dateReference.getMonth() + 1, annee: dateReference.getFullYear() }}
+      />
 
       <div className="reset-mois">
         <button type="button" className="btn-reset-mois" onClick={onReinitialiserMois}>
