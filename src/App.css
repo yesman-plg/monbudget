@@ -987,6 +987,189 @@ input[type="number"] {
   white-space: nowrap;
 }
 
+/* --- Analyse --- */
+
+.analyse {
+  margin-top: 30px;
+}
+
+.analyse-caption {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: -8px 0 16px;
+}
+
+.analyse-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.analyse-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--gridline);
+  border-radius: 12px;
+  background: var(--surface-1);
+}
+
+.analyse-row-icon {
+  font-size: 20px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.analyse-row-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.analyse-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.analyse-row-label {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.analyse-row-value {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.analyse-row-sub {
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.analyse-row-track {
+  position: relative;
+  height: 6px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  overflow: visible;
+}
+
+.analyse-row-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.analyse-row-repere {
+  position: absolute;
+  top: -2px;
+  width: 2px;
+  height: 10px;
+  background: var(--text-muted);
+  border-radius: 1px;
+}
+
+.analyse-tag {
+  flex-shrink: 0;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+.analyse-tag-bon {
+  color: var(--status-good);
+  background: var(--status-good-bg);
+}
+
+.analyse-tag-correct {
+  color: var(--text-secondary);
+  background: var(--surface-2);
+}
+
+.analyse-tag-faible {
+  color: var(--status-warning);
+  background: var(--status-warning-bg);
+}
+
+/* Règle 50/30/20 */
+
+.regle-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.regle-segment {
+  height: 100%;
+}
+
+.regle-essentiel {
+  background: var(--text-secondary);
+}
+
+.regle-plaisirs {
+  background: #eb6834;
+}
+
+.regle-epargne {
+  background: #0f9b8e;
+}
+
+.regle-legende {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.regle-legende em {
+  font-style: normal;
+  color: var(--text-muted);
+  margin-left: 3px;
+}
+
+.regle-puce {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.regle-puce-essentiel {
+  background: var(--text-secondary);
+}
+
+.regle-puce-plaisirs {
+  background: #eb6834;
+}
+
+.regle-puce-epargne {
+  background: #0f9b8e;
+}
+
 /* --- Réinitialiser le mois --- */
 
 .reset-mois {

@@ -7,6 +7,8 @@ import {
   sommeChargesFixesCeMois,
   montantCeMois,
   chargesVariablesDuMois,
+  moisPrecedent,
+  joursRestants,
   formatEuros,
 } from '../utils/budget'
 
@@ -79,6 +81,33 @@ export default function StepResume({
     warning: 'Charges fixes élevées',
     critical: 'Budget négatif',
   }[statutReste]
+
+  // --- Analyse ---
+
+  const tauxEpargne = partEpargne
+  const niveauEpargne = tauxEpargne >= 20 ? 'bon' : tauxEpargne >= 10 ? 'correct' : 'faible'
+  const labelEpargne = { bon: 'Excellent', correct: 'Correct', faible: 'Faible' }[niveauEpargne]
+
+  const montantLogement = chargesFixes
+    .filter((c) => c.categorie === 'Logement')
+    .reduce((sum, c) => sum + montantCeMois(c, dateReference), 0)
+  const tauxEffortLogement = totalRevenus > 0 ? (montantLogement / totalRevenus) * 100 : 0
+  const logementDansLaNorme = tauxEffortLogement <= 33
+
+  const pctEssentiel = totalRevenus > 0 ? ((totalChargesFixes - totalEpargne) / totalRevenus) * 100 : 0
+  const pctPlaisirs = totalRevenus > 0 ? (totalChargesVariables / totalRevenus) * 100 : 0
+  const pctEpargneRegle = tauxEpargne
+
+  const resteParJour = resteAVivre / joursRestants(dateReference)
+
+  const dateMoisPrecedent = moisPrecedent(dateReference)
+  const totalVariablesMoisPrecedent = sommeMontants(
+    chargesVariablesDuMois(chargesVariables, dateMoisPrecedent)
+  )
+  const evolutionVariables =
+    totalVariablesMoisPrecedent > 0
+      ? ((totalChargesVariables - totalVariablesMoisPrecedent) / totalVariablesMoisPrecedent) * 100
+      : null
 
   return (
     <section className="step">
@@ -176,6 +205,114 @@ export default function StepResume({
           </div>
         </div>
       )}
+
+      <div className="analyse">
+        <h3>
+          <Icon name="query_stats" className="step-title-icon" />
+          Analyse
+        </h3>
+        <p className="analyse-caption">Quelques repères financiers usuels, à titre indicatif.</p>
+
+        <div className="analyse-rows">
+          <div className="analyse-row">
+            <Icon name="savings" className="analyse-row-icon" />
+            <div className="analyse-row-body">
+              <div className="analyse-row-top">
+                <span className="analyse-row-label">Taux d'épargne</span>
+                <span className="analyse-row-value">{tauxEpargne.toFixed(1)} %</span>
+              </div>
+              <div className="analyse-row-track">
+                <div
+                  className="analyse-row-fill"
+                  style={{ width: `${Math.min(100, tauxEpargne)}%` }}
+                />
+                <div className="analyse-row-repere" style={{ left: '20%' }} />
+              </div>
+              <span className="analyse-row-sub">Repère courant : ≥ 20 % des revenus</span>
+            </div>
+            <span className={`analyse-tag analyse-tag-${niveauEpargne}`}>{labelEpargne}</span>
+          </div>
+
+          <div className="analyse-row">
+            <Icon name="home" className="analyse-row-icon" />
+            <div className="analyse-row-body">
+              <div className="analyse-row-top">
+                <span className="analyse-row-label">Taux d'effort logement</span>
+                <span className="analyse-row-value">{tauxEffortLogement.toFixed(1)} %</span>
+              </div>
+              <div className="analyse-row-track">
+                <div
+                  className="analyse-row-fill"
+                  style={{ width: `${Math.min(100, tauxEffortLogement)}%` }}
+                />
+                <div className="analyse-row-repere" style={{ left: '33%' }} />
+              </div>
+              <span className="analyse-row-sub">Seuil bancaire habituel : 33 % max</span>
+            </div>
+            <span className={`analyse-tag analyse-tag-${logementDansLaNorme ? 'bon' : 'faible'}`}>
+              {logementDansLaNorme ? 'Dans la norme' : 'Élevé'}
+            </span>
+          </div>
+
+          <div className="analyse-row analyse-row-regle">
+            <Icon name="pie_chart" className="analyse-row-icon" />
+            <div className="analyse-row-body">
+              <div className="analyse-row-top">
+                <span className="analyse-row-label">Règle 50 / 30 / 20</span>
+              </div>
+              <div className="regle-bar">
+                <div className="regle-segment regle-essentiel" style={{ width: `${Math.max(0, pctEssentiel)}%` }} />
+                <div className="regle-segment regle-plaisirs" style={{ width: `${Math.max(0, pctPlaisirs)}%` }} />
+                <div className="regle-segment regle-epargne" style={{ width: `${Math.max(0, pctEpargneRegle)}%` }} />
+              </div>
+              <div className="regle-legende">
+                <span><i className="regle-puce regle-puce-essentiel" />Essentiel {pctEssentiel.toFixed(0)}%<em>(50%)</em></span>
+                <span><i className="regle-puce regle-puce-plaisirs" />Plaisirs {pctPlaisirs.toFixed(0)}%<em>(30%)</em></span>
+                <span><i className="regle-puce regle-puce-epargne" />Épargne {pctEpargneRegle.toFixed(0)}%<em>(20%)</em></span>
+              </div>
+            </div>
+          </div>
+
+          <div className="analyse-row analyse-row-simple">
+            <Icon name="today" className="analyse-row-icon" />
+            <div className="analyse-row-body">
+              <div className="analyse-row-top">
+                <span className="analyse-row-label">Reste à vivre / jour</span>
+                <span className="analyse-row-value">{formatEuros(resteParJour)}</span>
+              </div>
+              <span className="analyse-row-sub">sur {joursRestants(dateReference)} jour(s) restant(s) sur la période</span>
+            </div>
+          </div>
+
+          <div className="analyse-row analyse-row-simple">
+            <Icon
+              name={
+                evolutionVariables === null
+                  ? 'trending_flat'
+                  : evolutionVariables > 0
+                    ? 'trending_up'
+                    : 'trending_down'
+              }
+              className="analyse-row-icon"
+            />
+            <div className="analyse-row-body">
+              <div className="analyse-row-top">
+                <span className="analyse-row-label">Dépenses variables vs mois précédent</span>
+                <span className="analyse-row-value">
+                  {evolutionVariables === null
+                    ? '—'
+                    : `${evolutionVariables > 0 ? '+' : ''}${evolutionVariables.toFixed(0)} %`}
+                </span>
+              </div>
+              <span className="analyse-row-sub">
+                {evolutionVariables === null
+                  ? "Pas de données pour le mois précédent"
+                  : `vs ${MOIS[dateMoisPrecedent.getMonth()]} ${dateMoisPrecedent.getFullYear()} (${formatEuros(totalVariablesMoisPrecedent)})`}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="reset-mois">
         <button type="button" className="btn-reset-mois" onClick={onReinitialiserMois}>

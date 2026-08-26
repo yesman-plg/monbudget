@@ -363,3 +363,22 @@ export function dateParDefaut(dateReference = new Date()) {
   const mois = String(dateReference.getMonth() + 1).padStart(2, '0')
   return `${annee}-${mois}-01`
 }
+
+export function moisPrecedent(dateReference) {
+  return new Date(dateReference.getFullYear(), dateReference.getMonth() - 1, 1)
+}
+
+export function joursDansLeMois(dateReference) {
+  return new Date(dateReference.getFullYear(), dateReference.getMonth() + 1, 0).getDate()
+}
+
+/** Jours restants dans le mois affiché (aujourd'hui inclus) ; le mois entier si ce n'est pas le mois en cours. */
+export function joursRestants(dateReference) {
+  const total = joursDansLeMois(dateReference)
+  const maintenant = new Date()
+  const memePeriode =
+    dateReference.getFullYear() === maintenant.getFullYear() &&
+    dateReference.getMonth() === maintenant.getMonth()
+  if (!memePeriode) return total
+  return Math.max(1, total - maintenant.getDate() + 1)
+}
