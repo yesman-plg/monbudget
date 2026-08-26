@@ -7,6 +7,7 @@ import {
   sommeMontants,
   sommeChargesFixesCeMois,
   montantCeMois,
+  estPreleveeCeMois,
   chargesVariablesDuMois,
   moisPrecedent,
   joursRestants,
@@ -35,7 +36,7 @@ export default function StepResume({
   else if (partChargesFixes > 60) statutReste = 'warning'
 
   const chargesFixesPrelevees = chargesFixes
-    .filter((c) => c.preleve)
+    .filter((c) => estPreleveeCeMois(c, dateReference))
     .reduce((sum, c) => sum + montantCeMois(c, dateReference), 0)
   const chargesFixesAVenir = totalChargesFixes - chargesFixesPrelevees
 

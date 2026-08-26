@@ -7,7 +7,7 @@ import StepChargesFixes from './StepChargesFixes'
 import StepChargesVariables from './StepChargesVariables'
 import StepResume from './StepResume'
 import { useCloudBudget } from '../hooks/useCloudBudget'
-import { estDansLaPeriode } from '../utils/budget'
+import { estDansLaPeriode, cleMois } from '../utils/budget'
 
 function periodeParDefaut() {
   const d = new Date()
@@ -48,8 +48,14 @@ export default function BudgetApp({ user, onDeconnecter }) {
     )
     if (!confirme) return
 
+    const cle = cleMois(dateReference)
     setChargesVariables((items) => items.filter((i) => !estDansLaPeriode(i, dateReference)))
-    setChargesFixes((fixes) => fixes.map((c) => ({ ...c, preleve: false })))
+    setChargesFixes((fixes) =>
+      fixes.map((c) => ({
+        ...c,
+        moisPreleves: (c.moisPreleves ?? []).filter((m) => m !== cle),
+      }))
+    )
   }
 
   return (

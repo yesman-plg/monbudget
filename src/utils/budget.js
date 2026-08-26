@@ -311,6 +311,20 @@ export function sommeChargesFixesCeMois(items, date = new Date()) {
   return items.reduce((total, item) => total + montantCeMois(item, date), 0)
 }
 
+/** Clé "AAAA-MM" identifiant un mois — sert à stocker un statut par mois. */
+export function cleMois(date = new Date()) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+}
+
+/**
+ * Le statut "prélevée" d'une charge fixe est propre à chaque mois : on garde
+ * la liste des mois où elle a été cochée, pas un simple booléen global —
+ * sinon la coche resterait allumée en changeant de mois.
+ */
+export function estPreleveeCeMois(item, dateReference = new Date()) {
+  return (item.moisPreleves ?? []).includes(cleMois(dateReference))
+}
+
 export function formatEuros(montant) {
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',

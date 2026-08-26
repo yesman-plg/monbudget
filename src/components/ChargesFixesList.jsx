@@ -10,6 +10,8 @@ import {
   estDueCeMois,
   montantCeMois,
   sommeChargesFixesCeMois,
+  cleMois,
+  estPreleveeCeMois,
   nouvelId,
   formatEuros,
 } from '../utils/budget'
@@ -39,7 +41,7 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
         categorie,
         jourPrelevement: '',
         moisPrelevement: '',
-        preleve: false,
+        moisPreleves: [],
         dureeMois: '',
         echeancesPassees: 0,
       },
@@ -84,14 +86,20 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
     onChange(items.filter((item) => item.id !== id))
   }
 
-  // Pour un crédit, valider "Prélevée" avance automatiquement le compteur
-  // d'échéances (et le recule si on annule) — un seul update atomique.
+  // Le statut "prélevée" est propre au mois affiché (voir estPreleveeCeMois).
+  // Pour un crédit, valider "Prélevée" avance aussi le compteur d'échéances
+  // (et le recule si on annule) — un seul update atomique.
   function basculerPreleve(item) {
-    const nouveauPreleve = !item.preleve
+    const cle = cleMois(dateReference)
+    const dejaPreleve = (item.moisPreleves ?? []).includes(cle)
+    const nouveauPreleve = !dejaPreleve
     onChange(
       items.map((i) => {
         if (i.id !== item.id) return i
-        if (i.categorie !== 'Crédits') return { ...i, preleve: nouveauPreleve }
+        const moisPreleves = nouveauPreleve
+          ? [...(i.moisPreleves ?? []), cle]
+          : (i.moisPreleves ?? []).filter((m) => m !== cle)
+        if (i.categorie !== 'Crédits') return { ...i, moisPreleves }
         const actuel = Number(i.echeancesPassees) || 0
         const duree = i.dureeMois ? Number(i.dureeMois) : null
         const suivant = nouveauPreleve
@@ -99,7 +107,7 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
             ? Math.min(actuel + 1, duree)
             : actuel + 1
           : Math.max(actuel - 1, 0)
-        return { ...i, preleve: nouveauPreleve, echeancesPassees: suivant }
+        return { ...i, moisPreleves, echeancesPassees: suivant }
       })
     )
   }
@@ -107,10 +115,10 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
   const itemsDus = items.filter((i) => estDueCeMois(i, dateReference))
   const total = sommeChargesFixesCeMois(items, dateReference)
   const totalPreleve = itemsDus
-    .filter((i) => i.preleve)
+    .filter((i) => estPreleveeCeMois(i, dateReference))
     .reduce((sum, i) => sum + montantCeMois(i, dateReference), 0)
   const totalAVenir = total - totalPreleve
-  const nbPreleve = itemsDus.filter((i) => i.preleve).length
+  const nbPreleve = itemsDus.filter((i) => estPreleveeCeMois(i, dateReference)).length
   const pourcentPreleve = total > 0 ? (totalPreleve / total) * 100 : 0
 
   const catOuverte = CATEGORIES_CHARGES_FIXES.find((c) => c.id === categorieOuverte)
@@ -178,9 +186,10 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
           const cat = categorieInfo(item.categorie)
           const pasMensuelle = item.frequence !== 'mensuel'
           const due = estDueCeMois(item, dateReference)
+          const preleveCeMois = estPreleveeCeMois(item, dateReference)
           return (
             <div
-              className={`charge-fixe-row ${item.preleve ? 'preleve' : ''}`}
+              className={`charge-fixe-row ${preleveCeMois ? 'preleve' : ''}`}
               key={item.id}
               style={{ '--chip-color': cat.color, '--chip-color-dark': cat.colorDark }}
             >
@@ -268,12 +277,12 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
 
                 <button
                   type="button"
-                  className={`toggle-preleve ${item.preleve ? 'on' : ''}`}
+                  className={`toggle-preleve ${preleveCeMois ? 'on' : ''}`}
                   disabled={pasMensuelle && !due}
                   onClick={() => basculerPreleve(item)}
                 >
-                  <Icon name={item.preleve ? 'check_circle' : 'radio_button_unchecked'} />
-                  {item.preleve ? 'Prélevée' : 'À venir'}
+                  <Icon name={preleveCeMois ? 'check_circle' : 'radio_button_unchecked'} />
+                  {preleveCeMois ? 'Prélevée' : 'À venir'}
                 </button>
               </div>
 
