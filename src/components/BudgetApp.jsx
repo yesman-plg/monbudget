@@ -55,7 +55,6 @@ export default function BudgetApp({ user, onDeconnecter }) {
   return (
     <div className="app">
       <header className="app-header">
-        <div className="app-header-spacer" aria-hidden="true" />
         <PeriodeSwitcher periode={periode} onChange={setPeriode} />
         <button
           type="button"
