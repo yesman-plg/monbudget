@@ -162,8 +162,8 @@
   background: none;
   color: var(--text-secondary);
   border-radius: 999px;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -499,9 +499,13 @@ input[type="date"] {
   background: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 4px;
   line-height: 1;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
 }
 
 .btn-icon .icon {
@@ -943,6 +947,7 @@ input[type="date"] {
 .btn-secondary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 12px 20px;
   border-radius: 10px;
@@ -952,6 +957,8 @@ input[type="date"] {
   border: 1px solid var(--gridline);
   background: var(--surface-1);
   color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
 }
 
 .btn-secondary .icon {
@@ -961,6 +968,7 @@ input[type="date"] {
 .btn-primary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 12px 22px;
   border-radius: 10px;
@@ -970,6 +978,8 @@ input[type="date"] {
   border: none;
   background: var(--accent);
   color: var(--accent-ink);
+  flex: 1;
+  min-width: 0;
 }
 
 .btn-primary .icon {
