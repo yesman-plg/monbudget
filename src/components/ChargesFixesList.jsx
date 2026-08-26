@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Icon from './Icon'
+import CategoryPicker from './CategoryPicker'
 import {
   CATEGORIES_CHARGES_FIXES,
   FREQUENCES,
@@ -101,22 +102,11 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
         </div>
       )}
 
-      <div className="category-chips">
-        {CATEGORIES_CHARGES_FIXES.map((cat) => (
-          <button
-            key={cat.id}
-            type="button"
-            className={`category-chip ${categorieOuverte === cat.id ? 'open' : ''}`}
-            style={{ '--chip-color': cat.color, '--chip-color-dark': cat.colorDark }}
-            onClick={() =>
-              setCategorieOuverte(categorieOuverte === cat.id ? null : cat.id)
-            }
-          >
-            <Icon name={cat.icon} className="category-chip-icon" />
-            {cat.id}
-          </button>
-        ))}
-      </div>
+      <CategoryPicker
+        categories={CATEGORIES_CHARGES_FIXES}
+        selectionnee={categorieOuverte}
+        onSelect={setCategorieOuverte}
+      />
 
       {catOuverte && (
         <div className="preset-chips">

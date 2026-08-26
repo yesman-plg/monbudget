@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Icon from './Icon'
+import CategoryPicker from './CategoryPicker'
 import {
   CATEGORIES_CHARGES_VARIABLES,
   categorieInfoVariable,
@@ -82,22 +83,11 @@ export default function JournalDepenses({ items, onChange, dateReference = new D
         </div>
       )}
 
-      <div className="category-chips">
-        {CATEGORIES_CHARGES_VARIABLES.map((cat) => (
-          <button
-            key={cat.id}
-            type="button"
-            className={`category-chip ${categorieOuverte === cat.id ? 'open' : ''}`}
-            style={{ '--chip-color': cat.color, '--chip-color-dark': cat.colorDark }}
-            onClick={() =>
-              setCategorieOuverte(categorieOuverte === cat.id ? null : cat.id)
-            }
-          >
-            <Icon name={cat.icon} className="category-chip-icon" />
-            {cat.id}
-          </button>
-        ))}
-      </div>
+      <CategoryPicker
+        categories={CATEGORIES_CHARGES_VARIABLES}
+        selectionnee={categorieOuverte}
+        onSelect={setCategorieOuverte}
+      />
 
       {catOuverte && (
         <div className="preset-chips">
