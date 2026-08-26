@@ -778,7 +778,8 @@ input[type="number"] {
   color: var(--status-good);
 }
 
-.journal-row.paye {
+.journal-row.paye,
+.charge-fixe-row.preleve {
   border-color: var(--status-good);
   background: var(--status-good-bg);
 }

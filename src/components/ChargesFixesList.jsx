@@ -158,7 +158,7 @@ export default function ChargesFixesList({ items, onChange, dateReference = new 
           const due = estDueCeMois(item, dateReference)
           return (
             <div
-              className="charge-fixe-row"
+              className={`charge-fixe-row ${item.preleve ? 'preleve' : ''}`}
               key={item.id}
               style={{ '--chip-color': cat.color, '--chip-color-dark': cat.colorDark }}
             >
