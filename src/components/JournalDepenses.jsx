@@ -3,24 +3,32 @@ import Icon from './Icon'
 import {
   CATEGORIES_CHARGES_VARIABLES,
   categorieInfoVariable,
+  estDansLaPeriode,
+  dateParDefaut,
   nouvelId,
   formatEuros,
-  dateDuJour,
 } from '../utils/budget'
 
 /**
  * Journal des dépenses variables : à remplir au fur et à mesure du mois.
+ * Chaque entrée reste rattachée au mois de sa propre date — on ne voit et
+ * ne compte ici que celles du mois actuellement affiché (dateReference).
  * On choisit une catégorie (puce colorée), puis un preset (ou "Autre").
- * Chaque entrée a une date, un libellé, un montant et un statut
- * "passée sur le compte" à cocher quand la dépense est bien débitée.
  */
-export default function JournalDepenses({ items, onChange }) {
+export default function JournalDepenses({ items, onChange, dateReference = new Date() }) {
   const [categorieOuverte, setCategorieOuverte] = useState(null)
 
   function ajouter(categorie, label = '') {
     onChange([
       ...items,
-      { id: nouvelId(), label, montant: '', date: dateDuJour(), paye: false, categorie },
+      {
+        id: nouvelId(),
+        label,
+        montant: '',
+        date: dateParDefaut(dateReference),
+        paye: false,
+        categorie,
+      },
     ])
   }
 
@@ -34,28 +42,30 @@ export default function JournalDepenses({ items, onChange }) {
     onChange(items.filter((item) => item.id !== id))
   }
 
-  const total = items.reduce((sum, i) => sum + (Number(i.montant) || 0), 0)
-  const totalPaye = items
+  const itemsDuMois = items.filter((i) => estDansLaPeriode(i, dateReference))
+
+  const total = itemsDuMois.reduce((sum, i) => sum + (Number(i.montant) || 0), 0)
+  const totalPaye = itemsDuMois
     .filter((i) => i.paye)
     .reduce((sum, i) => sum + (Number(i.montant) || 0), 0)
   const totalEnAttente = total - totalPaye
-  const nbPaye = items.filter((i) => i.paye).length
+  const nbPaye = itemsDuMois.filter((i) => i.paye).length
   const pourcentPaye = total > 0 ? (totalPaye / total) * 100 : 0
 
   const catOuverte = CATEGORIES_CHARGES_VARIABLES.find((c) => c.id === categorieOuverte)
   const labelsPresents = new Set(
-    items.filter((i) => i.categorie === categorieOuverte).map((i) => i.label)
+    itemsDuMois.filter((i) => i.categorie === categorieOuverte).map((i) => i.label)
   )
 
-  const itemsTries = [...items].sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+  const itemsTries = [...itemsDuMois].sort((a, b) => (b.date || '').localeCompare(a.date || ''))
 
   return (
     <div className="item-list">
-      {items.length > 0 && (
+      {itemsDuMois.length > 0 && (
         <div className="charges-overview">
           <div className="charges-overview-row">
             <span>
-              <strong>{nbPaye}</strong>/{items.length} passées sur le compte
+              <strong>{nbPaye}</strong>/{itemsDuMois.length} passées sur le compte
             </span>
             <span className="charges-overview-amounts">
               <span className="text-good">{formatEuros(totalPaye)} passées</span>

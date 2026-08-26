@@ -336,3 +336,30 @@ export function formatDateCourte(dateStr) {
   const [an, mois, jour] = dateStr.split('-')
   return `${jour}/${mois}`
 }
+
+/** Une dépense variable appartient au mois de sa propre date, pas au mois affiché. */
+export function estDansLaPeriode(item, dateReference = new Date()) {
+  if (!item.date) return false
+  const [annee, mois] = item.date.split('-').map(Number)
+  return annee === dateReference.getFullYear() && mois === dateReference.getMonth() + 1
+}
+
+export function chargesVariablesDuMois(items, dateReference = new Date()) {
+  return items.filter((item) => estDansLaPeriode(item, dateReference))
+}
+
+/**
+ * Date par défaut pour une nouvelle dépense : aujourd'hui si on consulte le
+ * mois en cours, sinon le 1er du mois affiché (on regarde un autre mois que
+ * l'actuel, la nouvelle entrée doit tomber dedans par défaut).
+ */
+export function dateParDefaut(dateReference = new Date()) {
+  const maintenant = new Date()
+  const memePeriode =
+    dateReference.getFullYear() === maintenant.getFullYear() &&
+    dateReference.getMonth() === maintenant.getMonth()
+  if (memePeriode) return dateDuJour()
+  const annee = dateReference.getFullYear()
+  const mois = String(dateReference.getMonth() + 1).padStart(2, '0')
+  return `${annee}-${mois}-01`
+}

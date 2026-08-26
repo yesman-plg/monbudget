@@ -7,6 +7,7 @@ import StepChargesFixes from './StepChargesFixes'
 import StepChargesVariables from './StepChargesVariables'
 import StepResume from './StepResume'
 import { useCloudBudget } from '../hooks/useCloudBudget'
+import { estDansLaPeriode } from '../utils/budget'
 
 const NB_ETAPES = 4
 
@@ -50,14 +51,14 @@ export default function BudgetApp({ user, onDeconnecter }) {
 
   function reinitialiserMois() {
     const confirme = window.confirm(
-      "Réinitialiser le mois ?\n\n" +
-        '• Le journal des charges variables sera entièrement vidé\n' +
-        '• Les charges fixes restent, mais repassent toutes à "À venir"\n\n' +
+      'Réinitialiser ce mois ?\n\n' +
+        '• Les dépenses variables de ce mois-ci seront supprimées (les autres mois ne sont pas touchés)\n' +
+        '• Les charges fixes repassent à "À venir"\n\n' +
         'Cette action est irréversible.'
     )
     if (!confirme) return
 
-    setChargesVariables([])
+    setChargesVariables((items) => items.filter((i) => !estDansLaPeriode(i, dateReference)))
     setChargesFixes((fixes) => fixes.map((c) => ({ ...c, preleve: false })))
   }
 
@@ -99,6 +100,7 @@ export default function BudgetApp({ user, onDeconnecter }) {
           <StepChargesVariables
             chargesVariables={chargesVariables}
             setChargesVariables={setChargesVariables}
+            dateReference={dateReference}
           />
         )}
         {etape === 3 && (

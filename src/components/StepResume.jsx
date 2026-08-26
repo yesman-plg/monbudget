@@ -6,6 +6,7 @@ import {
   sommeMontants,
   sommeChargesFixesCeMois,
   montantCeMois,
+  chargesVariablesDuMois,
   formatEuros,
 } from '../utils/budget'
 
@@ -17,9 +18,11 @@ export default function StepResume({
   periode,
   dateReference = new Date(),
 }) {
+  const variablesDuMois = chargesVariablesDuMois(chargesVariables, dateReference)
+
   const totalRevenus = sommeMontants(revenus)
   const totalChargesFixes = sommeChargesFixesCeMois(chargesFixes, dateReference)
-  const totalChargesVariables = sommeMontants(chargesVariables)
+  const totalChargesVariables = sommeMontants(variablesDuMois)
   const resteAVivre = totalRevenus - totalChargesFixes - totalChargesVariables
   const partChargesFixes =
     totalRevenus > 0 ? (totalChargesFixes / totalRevenus) * 100 : 0
@@ -33,7 +36,7 @@ export default function StepResume({
     .reduce((sum, c) => sum + montantCeMois(c, dateReference), 0)
   const chargesFixesAVenir = totalChargesFixes - chargesFixesPrelevees
 
-  const variablesPayees = chargesVariables
+  const variablesPayees = variablesDuMois
     .filter((c) => c.paye)
     .reduce((sum, c) => sum + (Number(c.montant) || 0), 0)
 
@@ -61,7 +64,7 @@ export default function StepResume({
     icon: cat.icon,
     color: cat.color,
     colorDark: cat.colorDark,
-    montant: chargesVariables
+    montant: variablesDuMois
       .filter((c) => c.categorie === cat.id)
       .reduce((sum, c) => sum + (Number(c.montant) || 0), 0),
   }))
@@ -148,7 +151,7 @@ export default function StepResume({
 
       {parCategorieVariable.length > 0 && (
         <div className="breakdown">
-          <h3>Dépenses variables par catégorie</h3>
+          <h3>Dépenses variables par catégorie (ce mois-ci)</h3>
           <div className="breakdown-bars" role="table" aria-label="Dépenses variables par catégorie">
             {parCategorieVariable.map((c) => (
               <div
@@ -177,11 +180,11 @@ export default function StepResume({
       <div className="reset-mois">
         <button type="button" className="btn-reset-mois" onClick={onReinitialiserMois}>
           <Icon name="restart_alt" />
-          Réinitialiser le mois
+          Réinitialiser ce mois
         </button>
         <p className="reset-mois-hint">
-          Vide le journal des charges variables et repasse les charges fixes à
-          "À venir". Les charges fixes elles-mêmes ne sont pas supprimées.
+          Supprime les dépenses variables du mois affiché (les autres mois ne
+          sont pas touchés) et repasse les charges fixes à "À venir".
         </p>
       </div>
     </section>
