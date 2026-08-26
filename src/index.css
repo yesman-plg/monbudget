@@ -1,3 +1,14 @@
+/* Hébergée localement (pas de dépendance à Google Fonts pour cette police) :
+   fiabilité de chargement garantie même sur connexion mobile capricieuse.
+   Fichier variable, une seule requête couvre les graisses 400 à 700. */
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url('/monbudget/fonts/source-code-pro-variable.woff2') format('woff2');
+}
+
 :root {
   color-scheme: light;
 
