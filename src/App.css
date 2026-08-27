@@ -229,7 +229,7 @@
   background: none;
   border: none;
   border-radius: 10px;
-  padding: 9px 14px;
+  padding: 9px 10px;
   font-size: 0.85rem;
   font-weight: 600;
   font-family: var(--font-body);
@@ -237,6 +237,14 @@
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.step-indicator-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   min-width: 0;
 }
 
