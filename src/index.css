@@ -1,12 +1,12 @@
 /* Hébergée localement (pas de dépendance à Google Fonts pour cette police) :
    fiabilité de chargement garantie même sur connexion mobile capricieuse.
-   Fichier variable, une seule requête couvre les graisses 400 à 700. */
+   Fichier variable, une seule requête couvre les graisses 100 à 900. */
 @font-face {
-  font-family: 'Source Code Pro';
+  font-family: 'Geist Mono';
   font-style: normal;
-  font-weight: 200 900;
+  font-weight: 100 900;
   font-display: swap;
-  src: url('/monbudget/fonts/source-code-pro-variable.woff2') format('woff2');
+  src: url('/monbudget/fonts/geist-mono-variable.woff2') format('woff2');
 }
 
 :root {
@@ -38,7 +38,7 @@
 
   --font-display: 'Fraunces', ui-serif, Georgia, serif;
   --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'Source Code Pro', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   font-family: var(--font-body);
 }
