@@ -2,8 +2,8 @@ import Icon from './Icon'
 
 const ETAPES = [
   { label: 'Revenus', icon: 'payments' },
-  { label: 'Charges fixes', icon: 'push_pin' },
-  { label: 'Charges variables', icon: 'receipt_long' },
+  { label: 'Fixes', icon: 'push_pin' },
+  { label: 'Variables', icon: 'receipt_long' },
   { label: 'Résumé', icon: 'bar_chart' },
   { label: 'Astuces', icon: 'lightbulb' },
 ]
