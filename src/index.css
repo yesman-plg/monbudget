@@ -1,12 +1,13 @@
 /* Hébergée localement (pas de dépendance à Google Fonts pour cette police) :
    fiabilité de chargement garantie même sur connexion mobile capricieuse.
-   Fichier variable, une seule requête couvre les graisses 100 à 900. */
+   Fichier variable, une seule requête couvre les graisses 400 à 900.
+   Zéro vérifié à fort zoom : ovale plein, ni point ni barre. */
 @font-face {
-  font-family: 'Geist Mono';
+  font-family: 'Chivo Mono';
   font-style: normal;
-  font-weight: 100 900;
+  font-weight: 400 900;
   font-display: swap;
-  src: url('/monbudget/fonts/geist-mono-variable.woff2') format('woff2');
+  src: url('/monbudget/fonts/chivo-mono-variable.woff2') format('woff2');
 }
 
 :root {
@@ -38,7 +39,7 @@
 
   --font-display: 'Fraunces', ui-serif, Georgia, serif;
   --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-mono: 'Chivo Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   font-family: var(--font-body);
 }
