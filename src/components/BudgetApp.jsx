@@ -6,6 +6,7 @@ import StepRevenus from './StepRevenus'
 import StepChargesFixes from './StepChargesFixes'
 import StepChargesVariables from './StepChargesVariables'
 import StepResume from './StepResume'
+import StepAstuces from './StepAstuces'
 import { useCloudBudget } from '../hooks/useCloudBudget'
 import { estDansLaPeriode, cleMois } from '../utils/budget'
 
@@ -105,6 +106,7 @@ export default function BudgetApp({ user, onDeconnecter }) {
             dateReference={dateReference}
           />
         )}
+        {etape === 4 && <StepAstuces />}
       </main>
     </div>
   )

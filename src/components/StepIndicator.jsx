@@ -5,6 +5,7 @@ const ETAPES = [
   { label: 'Charges fixes', icon: 'push_pin' },
   { label: 'Charges variables', icon: 'receipt_long' },
   { label: 'Résumé', icon: 'bar_chart' },
+  { label: 'Astuces', icon: 'lightbulb' },
 ]
 
 export default function StepIndicator({ etapeActuelle, onGoTo }) {
