@@ -37,8 +37,8 @@
   --status-warning-bg: #f8ecd7;
   --status-critical-bg: #f8e4e0;
 
-  --font-display: 'Fraunces', ui-serif, Georgia, serif;
-  --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Chivo Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-body: 'Chivo Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
   --font-mono: 'Chivo Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   font-family: var(--font-body);
