@@ -151,25 +151,25 @@ export default function StepAstuces() {
         situation, pas des conseils personnalisés.
       </p>
 
-      {THEMES.map((theme) => (
-        <div className="analyse" key={theme.titre}>
-          <h3>
-            <Icon name={theme.icon} className="step-title-icon" />
-            {theme.titre}
-          </h3>
-          <div className="analyse-rows">
+      <div className="tip-grid">
+        {THEMES.map((theme) => (
+          <div className="tip-card" key={theme.titre}>
+            <h3>
+              <Icon name={theme.icon} />
+              {theme.titre}
+            </h3>
             {theme.conseils.map((conseil) => (
-              <div className="analyse-row" key={conseil.titre}>
-                <Icon name="check_circle" className="analyse-row-icon" />
-                <div className="analyse-row-body">
-                  <span className="analyse-row-label">{conseil.titre}</span>
-                  <span className="analyse-row-sub">{conseil.texte}</span>
+              <div className="tip-row" key={conseil.titre}>
+                <Icon name="check_circle" />
+                <div>
+                  <p className="tip-title">{conseil.titre}</p>
+                  <p className="tip-text">{conseil.texte}</p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </section>
   )
 }

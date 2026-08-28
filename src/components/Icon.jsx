@@ -1,11 +1,120 @@
+import {
+  Wallet,
+  UserCircle,
+  Plus,
+  ArrowRight,
+  ChartBar,
+  Tag,
+  CheckCircle,
+  CaretLeft,
+  CaretRight,
+  X,
+  ArrowsLeftRight,
+  House,
+  Lightbulb,
+  Coins,
+  ChartPie,
+  PushPin,
+  ChartLineUp,
+  Receipt,
+  ArrowCounterClockwise,
+  CalendarBlank,
+  TrendUp,
+  CaretUp,
+  CaretDown,
+  Circle,
+  Warning,
+  WarningCircle,
+  Minus,
+  TrendDown,
+  Check,
+  Bank,
+  Lightning,
+  Wrench,
+  Baby,
+  CreditCard,
+  DeviceMobile,
+  Car,
+  UsersFour,
+  Airplane,
+  FirstAidKit,
+  Pill,
+  PawPrint,
+  Gift,
+  ForkKnife,
+  Shield,
+  ShoppingBag,
+  ShoppingCart,
+  Flower,
+  MaskHappy,
+  WifiHigh,
+  Briefcase,
+} from '@phosphor-icons/react'
+
+// Table de correspondance : nom sémantique interne (utilisé partout dans
+// l'appli, ex. "home", "trending_up" — d'anciens noms Material Symbols
+// conservés comme clés pour ne pas retoucher chaque <Icon name="..."/>)
+// vers son équivalent Phosphor, en contour fin.
+const ICONES = {
+  account_balance_wallet: Wallet,
+  account_circle: UserCircle,
+  add: Plus,
+  arrow_forward: ArrowRight,
+  bar_chart: ChartBar,
+  category: Tag,
+  check_circle: CheckCircle,
+  chevron_left: CaretLeft,
+  chevron_right: CaretRight,
+  close: X,
+  compare_arrows: ArrowsLeftRight,
+  home: House,
+  lightbulb: Lightbulb,
+  payments: Coins,
+  pie_chart: ChartPie,
+  push_pin: PushPin,
+  query_stats: ChartLineUp,
+  receipt_long: Receipt,
+  restart_alt: ArrowCounterClockwise,
+  today: CalendarBlank,
+  trending_up: TrendUp,
+  expand_less: CaretUp,
+  expand_more: CaretDown,
+  radio_button_unchecked: Circle,
+  warning: Warning,
+  error: WarningCircle,
+  trending_flat: Minus,
+  trending_down: TrendDown,
+  check: Check,
+  account_balance: Bank,
+  bolt: Lightning,
+  build: Wrench,
+  child_care: Baby,
+  credit_card: CreditCard,
+  devices: DeviceMobile,
+  directions_car: Car,
+  family_restroom: UsersFour,
+  flight: Airplane,
+  medical_services: FirstAidKit,
+  medication: Pill,
+  pets: PawPrint,
+  redeem: Gift,
+  restaurant: ForkKnife,
+  shield: Shield,
+  shopping_bag: ShoppingBag,
+  shopping_cart: ShoppingCart,
+  spa: Flower,
+  theater_comedy: MaskHappy,
+  wifi: WifiHigh,
+  work: Briefcase,
+}
+
 /**
- * Icône Material Symbols (Google). `name` est le nom de symbole officiel
- * (ex. "home", "bolt", "savings") — voir fonts.google.com/icons.
+ * Icône Phosphor (contour fin, weight "regular"). `name` reste le nom
+ * sémantique déjà utilisé dans toute l'appli — voir ICONES ci-dessus pour
+ * la correspondance vers le composant Phosphor réellement rendu.
  */
 export default function Icon({ name, className = '' }) {
-  return (
-    <span className={`material-symbols-rounded icon ${className}`} aria-hidden="true">
-      {name}
-    </span>
-  )
+  const IconComponent = ICONES[name]
+  if (!IconComponent) return null
+  return <IconComponent weight="regular" className={`icon ${className}`} aria-hidden="true" />
 }

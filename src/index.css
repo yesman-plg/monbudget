@@ -13,29 +13,33 @@
 :root {
   color-scheme: light;
 
-  /* Fond & surfaces — neutre chaud, papier plutôt que blanc pur */
-  --surface-page: #f5f3ee;
+  /* Fond & surfaces — dashboard financier, froid et clair, jamais blanc pur */
+  --surface-page: #f3f6fb;
   --surface-1: #ffffff;
-  --surface-2: #edeae1;
+  --surface-2: #edf1f8;
 
-  /* Encre — gris à léger biais chaud, jamais gris pur */
-  --text-primary: #1c1a16;
-  --text-secondary: #5c584f;
-  --text-muted: #8b877c;
-  --gridline: #e2ded2;
-  --border: rgba(28, 26, 22, 0.1);
+  /* Encre — bleu-nuit, jamais gris pur */
+  --text-primary: #101a2e;
+  --text-secondary: #5b6b85;
+  --text-muted: #8590a6;
+  --gridline: #dce3ee;
+  --border: rgba(16, 26, 46, 0.1);
 
-  /* Chrome — neutre graphite, la couleur reste réservée aux catégories */
-  --accent: #23262e;
-  --accent-hover: #34373f;
+  /* Chrome — bleu confiance, la couleur vive reste réservée aux catégories */
+  --accent: #1e3a6e;
+  --accent-hover: #16305c;
   --accent-ink: #ffffff;
 
-  --status-good: #0ca30c;
-  --status-warning: #b3760a;
-  --status-critical: #c8372f;
-  --status-good-bg: #e6f4e1;
-  --status-warning-bg: #f8ecd7;
-  --status-critical-bg: #f8e4e0;
+  --status-good: #1c8a5e;
+  --status-warning: #b76e00;
+  --status-critical: #c0392b;
+  --status-pending: #3d6fb4;
+  --status-attention: #9c4f96;
+  --status-good-bg: #e3f3ec;
+  --status-warning-bg: #fbeedd;
+  --status-critical-bg: #fbe7e4;
+  --status-pending-bg: #e3ecf8;
+  --status-attention-bg: #f3e6f2;
 
   --font-display: 'Chivo Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
   --font-body: 'Chivo Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
@@ -47,51 +51,59 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --surface-page: #131319;
-    --surface-1: #1c1c24;
-    --surface-2: #24242e;
+    --surface-page: #0e1420;
+    --surface-1: #16202e;
+    --surface-2: #1d293b;
 
-    --text-primary: #f1efe8;
-    --text-secondary: #b8b4a8;
-    --text-muted: #837f74;
-    --gridline: #2f2f3a;
-    --border: rgba(241, 239, 232, 0.12);
+    --text-primary: #eaf0fa;
+    --text-secondary: #a9b7cc;
+    --text-muted: #74839b;
+    --gridline: #2a3a50;
+    --border: rgba(234, 240, 250, 0.12);
 
-    --accent: #ece8dd;
-    --accent-hover: #d9d5c8;
-    --accent-ink: #17161c;
+    --accent: #8da6e8;
+    --accent-hover: #a9bef0;
+    --accent-ink: #0e1420;
 
-    --status-good: #35c93f;
-    --status-warning: #f0b429;
-    --status-critical: #f0655c;
-    --status-good-bg: rgba(53, 201, 63, 0.14);
-    --status-warning-bg: rgba(240, 180, 41, 0.14);
-    --status-critical-bg: rgba(240, 101, 92, 0.14);
+    --status-good: #3fbe86;
+    --status-warning: #e0a040;
+    --status-critical: #e4685a;
+    --status-pending: #7fa8e0;
+    --status-attention: #c98bc3;
+    --status-good-bg: rgba(63, 190, 134, 0.16);
+    --status-pending-bg: rgba(127, 168, 224, 0.16);
+    --status-attention-bg: rgba(201, 139, 195, 0.16);
+    --status-warning-bg: rgba(224, 160, 64, 0.16);
+    --status-critical-bg: rgba(228, 104, 90, 0.16);
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --surface-page: #131319;
-  --surface-1: #1c1c24;
-  --surface-2: #24242e;
+  --surface-page: #0e1420;
+  --surface-1: #16202e;
+  --surface-2: #1d293b;
 
-  --text-primary: #f1efe8;
-  --text-secondary: #b8b4a8;
-  --text-muted: #837f74;
-  --gridline: #2f2f3a;
-  --border: rgba(241, 239, 232, 0.12);
+  --text-primary: #eaf0fa;
+  --text-secondary: #a9b7cc;
+  --text-muted: #74839b;
+  --gridline: #2a3a50;
+  --border: rgba(234, 240, 250, 0.12);
 
-  --accent: #ece8dd;
-  --accent-hover: #d9d5c8;
-  --accent-ink: #17161c;
+  --accent: #8da6e8;
+  --accent-hover: #a9bef0;
+  --accent-ink: #0e1420;
 
-  --status-good: #35c93f;
-  --status-warning: #f0b429;
-  --status-critical: #f0655c;
-  --status-good-bg: rgba(53, 201, 63, 0.14);
-  --status-warning-bg: rgba(240, 180, 41, 0.14);
-  --status-critical-bg: rgba(240, 101, 92, 0.14);
+  --status-good: #3fbe86;
+  --status-warning: #e0a040;
+  --status-critical: #e4685a;
+  --status-pending: #7fa8e0;
+  --status-attention: #c98bc3;
+  --status-good-bg: rgba(63, 190, 134, 0.16);
+  --status-pending-bg: rgba(127, 168, 224, 0.16);
+  --status-attention-bg: rgba(201, 139, 195, 0.16);
+  --status-warning-bg: rgba(224, 160, 64, 0.16);
+  --status-critical-bg: rgba(228, 104, 90, 0.16);
 }
 
 * {
@@ -115,8 +127,4 @@ select,
 button {
   font-family: inherit;
   font-size: 1rem;
-}
-
-.material-symbols-rounded {
-  font-variation-settings: 'opsz' 24, 'wght' 450, 'FILL' 0, 'GRAD' 0;
 }

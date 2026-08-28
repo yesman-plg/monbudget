@@ -77,7 +77,6 @@ export default function StepResume({
 
   const maxCategorieVariable = Math.max(...parCategorieVariable.map((c) => c.montant), 1)
 
-  const statutIcone = { good: 'check_circle', warning: 'warning', critical: 'error' }[statutReste]
   const statutTexte = {
     good: 'Équilibré',
     warning: 'Charges fixes élevées',
@@ -94,7 +93,9 @@ export default function StepResume({
     .filter((c) => c.categorie === 'Logement')
     .reduce((sum, c) => sum + montantCeMois(c, dateReference), 0)
   const tauxEffortLogement = totalRevenus > 0 ? (montantLogement / totalRevenus) * 100 : 0
-  const logementDansLaNorme = tauxEffortLogement <= 33
+  // Le seuil bancaire strict (33 %) sert à l'octroi de crédit, pas à un budget
+  // au quotidien — on ne signale "Élevé" qu'au-delà d'une marge plus tolérante.
+  const logementDansLaNorme = tauxEffortLogement <= 38
 
   const pctEssentiel = totalRevenus > 0 ? ((totalChargesFixes - totalEpargne) / totalRevenus) * 100 : 0
   const pctPlaisirs = totalRevenus > 0 ? (totalChargesVariables / totalRevenus) * 100 : 0
@@ -120,12 +121,10 @@ export default function StepResume({
 
       <div className="stat-tiles">
         <div className="stat-tile stat-tile-revenus">
-          <Icon name="payments" className="stat-tile-icon" />
           <span className="stat-tile-label">Revenus</span>
           <span className="stat-tile-value">{formatEuros(totalRevenus)}</span>
         </div>
         <div className="stat-tile stat-tile-fixes">
-          <Icon name="push_pin" className="stat-tile-icon" />
           <span className="stat-tile-label">Charges fixes</span>
           <span className="stat-tile-value">{formatEuros(totalChargesFixes)}</span>
           <span className="stat-tile-sub">
@@ -133,49 +132,48 @@ export default function StepResume({
           </span>
         </div>
         <div className="stat-tile stat-tile-variables">
-          <Icon name="receipt_long" className="stat-tile-icon" />
           <span className="stat-tile-label">Charges variables</span>
           <span className="stat-tile-value">{formatEuros(totalChargesVariables)}</span>
           <span className="stat-tile-sub">{formatEuros(variablesPayees)} déjà passées</span>
         </div>
         <div className="stat-tile stat-tile-epargne">
-          <Icon name="trending_up" className="stat-tile-icon" />
           <span className="stat-tile-label">Épargne</span>
           <span className="stat-tile-value">{formatEuros(totalEpargne)}</span>
           <span className="stat-tile-sub">{partEpargne.toFixed(0)}% des revenus</span>
         </div>
         <div className={`stat-tile stat-tile-${statutReste}`}>
-          <Icon name={statutIcone} className="stat-tile-icon" />
           <span className="stat-tile-label">Reste à vivre</span>
           <span className="stat-tile-value">{formatEuros(resteAVivre)}</span>
-          <span className="stat-tile-sub">{statutTexte}</span>
+          <span className={`stat-tile-pill stat-tile-pill-${statutReste}`}>{statutTexte}</span>
         </div>
       </div>
 
       {parCategorie.length > 0 && (
         <div className="breakdown">
           <h3>Charges fixes par catégorie (ce mois-ci)</h3>
-          <div className="breakdown-bars" role="table" aria-label="Charges fixes par catégorie">
-            {parCategorie.map((c) => (
-              <div
-                className="breakdown-row"
-                key={c.categorie}
-                role="row"
-                style={{ '--chip-color': c.color, '--chip-color-dark': c.colorDark }}
-              >
-                <span className="breakdown-label" role="cell">
-                  <Icon name={c.icon} />
-                  {c.categorie}
-                </span>
-                <div className="breakdown-bar-track" role="cell">
-                  <div
-                    className="breakdown-bar-fill"
-                    style={{ width: `${(c.montant / maxCategorie) * 100}%` }}
-                  />
+          <div className="analyse-card">
+            <div className="breakdown-bars" role="table" aria-label="Charges fixes par catégorie">
+              {parCategorie.map((c) => (
+                <div
+                  className="breakdown-row"
+                  key={c.categorie}
+                  role="row"
+                  style={{ '--chip-color': c.color, '--chip-color-dark': c.colorDark }}
+                >
+                  <span className="breakdown-label" role="cell">
+                    <Icon name={c.icon} />
+                    {c.categorie}
+                  </span>
+                  <div className="breakdown-bar-track" role="cell">
+                    <div
+                      className="breakdown-bar-fill"
+                      style={{ width: `${(c.montant / maxCategorie) * 100}%` }}
+                    />
+                  </div>
+                  <span className="breakdown-value" role="cell">{formatEuros(c.montant)}</span>
                 </div>
-                <span className="breakdown-value" role="cell">{formatEuros(c.montant)}</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -183,27 +181,29 @@ export default function StepResume({
       {parCategorieVariable.length > 0 && (
         <div className="breakdown">
           <h3>Dépenses variables par catégorie (ce mois-ci)</h3>
-          <div className="breakdown-bars" role="table" aria-label="Dépenses variables par catégorie">
-            {parCategorieVariable.map((c) => (
-              <div
-                className="breakdown-row"
-                key={c.categorie}
-                role="row"
-                style={{ '--chip-color': c.color, '--chip-color-dark': c.colorDark }}
-              >
-                <span className="breakdown-label" role="cell">
-                  <Icon name={c.icon} />
-                  {c.categorie}
-                </span>
-                <div className="breakdown-bar-track" role="cell">
-                  <div
-                    className="breakdown-bar-fill"
-                    style={{ width: `${(c.montant / maxCategorieVariable) * 100}%` }}
-                  />
+          <div className="analyse-card">
+            <div className="breakdown-bars" role="table" aria-label="Dépenses variables par catégorie">
+              {parCategorieVariable.map((c) => (
+                <div
+                  className="breakdown-row"
+                  key={c.categorie}
+                  role="row"
+                  style={{ '--chip-color': c.color, '--chip-color-dark': c.colorDark }}
+                >
+                  <span className="breakdown-label" role="cell">
+                    <Icon name={c.icon} />
+                    {c.categorie}
+                  </span>
+                  <div className="breakdown-bar-track" role="cell">
+                    <div
+                      className="breakdown-bar-fill"
+                      style={{ width: `${(c.montant / maxCategorieVariable) * 100}%` }}
+                    />
+                  </div>
+                  <span className="breakdown-value" role="cell">{formatEuros(c.montant)}</span>
                 </div>
-                <span className="breakdown-value" role="cell">{formatEuros(c.montant)}</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -215,101 +215,90 @@ export default function StepResume({
         </h3>
         <p className="analyse-caption">Quelques repères financiers usuels, à titre indicatif.</p>
 
-        <div className="analyse-rows">
-          <div className="analyse-row">
-            <Icon name="trending_up" className="analyse-row-icon" />
-            <div className="analyse-row-body">
-              <div className="analyse-row-top">
-                <span className="analyse-row-label">Taux d'épargne</span>
-                <span className="analyse-row-value">{tauxEpargne.toFixed(1)} %</span>
-              </div>
-              <div className="analyse-row-track">
-                <div
-                  className="analyse-row-fill"
-                  style={{ width: `${Math.min(100, tauxEpargne)}%` }}
-                />
-                <div className="analyse-row-repere" style={{ left: '20%' }} />
-              </div>
-              <span className="analyse-row-sub">Repère courant : ≥ 20 % des revenus</span>
-            </div>
-            <span className={`analyse-tag analyse-tag-${niveauEpargne}`}>{labelEpargne}</span>
-          </div>
-
-          <div className="analyse-row">
-            <Icon name="home" className="analyse-row-icon" />
-            <div className="analyse-row-body">
-              <div className="analyse-row-top">
-                <span className="analyse-row-label">Taux d'effort logement</span>
-                <span className="analyse-row-value">{tauxEffortLogement.toFixed(1)} %</span>
-              </div>
-              <div className="analyse-row-track">
-                <div
-                  className="analyse-row-fill"
-                  style={{ width: `${Math.min(100, tauxEffortLogement)}%` }}
-                />
-                <div className="analyse-row-repere" style={{ left: '33%' }} />
-              </div>
-              <span className="analyse-row-sub">Seuil bancaire habituel : 33 % max</span>
-            </div>
-            <span className={`analyse-tag analyse-tag-${logementDansLaNorme ? 'bon' : 'faible'}`}>
-              {logementDansLaNorme ? 'Dans la norme' : 'Élevé'}
-            </span>
-          </div>
-
-          <div className="analyse-row analyse-row-regle">
-            <Icon name="pie_chart" className="analyse-row-icon" />
-            <div className="analyse-row-body">
-              <div className="analyse-row-top">
-                <span className="analyse-row-label">Règle 50 / 30 / 20</span>
-              </div>
-              <div className="regle-bar">
-                <div className="regle-segment regle-essentiel" style={{ width: `${Math.max(0, pctEssentiel)}%` }} />
-                <div className="regle-segment regle-plaisirs" style={{ width: `${Math.max(0, pctPlaisirs)}%` }} />
-                <div className="regle-segment regle-epargne" style={{ width: `${Math.max(0, pctEpargneRegle)}%` }} />
-              </div>
-              <div className="regle-legende">
-                <span><i className="regle-puce regle-puce-essentiel" />Essentiel {pctEssentiel.toFixed(0)}%<em>(50%)</em></span>
-                <span><i className="regle-puce regle-puce-plaisirs" />Plaisirs {pctPlaisirs.toFixed(0)}%<em>(30%)</em></span>
-                <span><i className="regle-puce regle-puce-epargne" />Épargne {pctEpargneRegle.toFixed(0)}%<em>(20%)</em></span>
+        <div className="analyse-card">
+          <div className="analyse-rows">
+            <div className="analyse-row">
+              <Icon name="trending_up" className="analyse-row-icon" />
+              <div className="analyse-row-body">
+                <div className="analyse-row-top">
+                  <span className="analyse-row-label">Taux d'épargne</span>
+                  <span className="analyse-row-top-right">
+                    <span className="analyse-row-value">{tauxEpargne.toFixed(1)} %</span>
+                    <span className={`analyse-tag analyse-tag-${niveauEpargne}`}>{labelEpargne}</span>
+                  </span>
+                </div>
+                <div className="analyse-row-track">
+                  <div
+                    className={`analyse-row-fill analyse-row-fill-${niveauEpargne === 'bon' ? 'good' : niveauEpargne === 'correct' ? 'pending' : 'warning'}`}
+                    style={{ width: `${Math.min(100, tauxEpargne)}%` }}
+                  />
+                  <div className="analyse-row-repere" style={{ left: '20%' }} />
+                </div>
+                <span className="analyse-row-sub">Repère courant : ≥ 20 % des revenus</span>
               </div>
             </div>
-          </div>
 
-          <div className="analyse-row analyse-row-simple">
-            <Icon name="today" className="analyse-row-icon" />
-            <div className="analyse-row-body">
-              <div className="analyse-row-top">
-                <span className="analyse-row-label">Reste à vivre / jour</span>
-                <span className="analyse-row-value">{formatEuros(resteParJour)}</span>
+            <div className="analyse-row">
+              <Icon name="home" className="analyse-row-icon" />
+              <div className="analyse-row-body">
+                <div className="analyse-row-top">
+                  <span className="analyse-row-label">Taux d'effort logement</span>
+                  <span className="analyse-row-top-right">
+                    <span className="analyse-row-value">{tauxEffortLogement.toFixed(1)} %</span>
+                    <span className={`analyse-tag analyse-tag-${logementDansLaNorme ? 'bon' : 'faible'}`}>
+                      {logementDansLaNorme ? 'Dans la norme' : 'Élevé'}
+                    </span>
+                  </span>
+                </div>
+                <div className="analyse-row-track">
+                  <div
+                    className={`analyse-row-fill analyse-row-fill-${logementDansLaNorme ? 'good' : 'warning'}`}
+                    style={{ width: `${Math.min(100, tauxEffortLogement)}%` }}
+                  />
+                  <div className="analyse-row-repere" style={{ left: '38%' }} />
+                </div>
+                <span className="analyse-row-sub">Repère confortable : ≤ 38 % des revenus (seuil bancaire strict : 33 %)</span>
               </div>
-              <span className="analyse-row-sub">sur {joursRestants(dateReference)} jour(s) restant(s) sur la période</span>
+            </div>
+
+            <div className="analyse-row analyse-row-regle">
+              <Icon name="pie_chart" className="analyse-row-icon" />
+              <div className="analyse-row-body">
+                <div className="analyse-row-top">
+                  <span className="analyse-row-label">Règle 50 / 30 / 20</span>
+                </div>
+                <div className="regle-bar">
+                  <div className="regle-segment regle-essentiel" style={{ width: `${Math.max(0, pctEssentiel)}%` }} />
+                  <div className="regle-segment regle-plaisirs" style={{ width: `${Math.max(0, pctPlaisirs)}%` }} />
+                  <div className="regle-segment regle-epargne" style={{ width: `${Math.max(0, pctEpargneRegle)}%` }} />
+                </div>
+                <div className="regle-legende">
+                  <span><i className="regle-puce regle-puce-essentiel" />Essentiel {pctEssentiel.toFixed(0)}%<em>(50%)</em></span>
+                  <span><i className="regle-puce regle-puce-plaisirs" />Plaisirs {pctPlaisirs.toFixed(0)}%<em>(30%)</em></span>
+                  <span><i className="regle-puce regle-puce-epargne" />Épargne {pctEpargneRegle.toFixed(0)}%<em>(20%)</em></span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="analyse-row analyse-row-simple">
-            <Icon
-              name={
-                evolutionVariables === null
-                  ? 'trending_flat'
-                  : evolutionVariables > 0
-                    ? 'trending_up'
-                    : 'trending_down'
-              }
-              className="analyse-row-icon"
-            />
-            <div className="analyse-row-body">
-              <div className="analyse-row-top">
-                <span className="analyse-row-label">Dépenses variables vs mois précédent</span>
-                <span className="analyse-row-value">
-                  {evolutionVariables === null
-                    ? '—'
-                    : `${evolutionVariables > 0 ? '+' : ''}${evolutionVariables.toFixed(0)} %`}
-                </span>
-              </div>
-              <span className="analyse-row-sub">
+          <div className="analyse-footer">
+            <div className="analyse-footer-item">
+              <span className="analyse-footer-value">{formatEuros(resteParJour)}</span>
+              <span className="analyse-footer-sub">
+                reste à vivre / jour · {joursRestants(dateReference)} j restants
+              </span>
+            </div>
+            <div className="analyse-footer-divider" />
+            <div className="analyse-footer-item">
+              <span className={`analyse-footer-value ${evolutionVariables !== null && evolutionVariables < 0 ? 'good' : ''}`}>
                 {evolutionVariables === null
-                  ? "Pas de données pour le mois précédent"
-                  : `vs ${MOIS[dateMoisPrecedent.getMonth()]} ${dateMoisPrecedent.getFullYear()} (${formatEuros(totalVariablesMoisPrecedent)})`}
+                  ? '—'
+                  : `${evolutionVariables > 0 ? '+' : ''}${evolutionVariables.toFixed(0)} %`}
+              </span>
+              <span className="analyse-footer-sub">
+                {evolutionVariables === null
+                  ? 'dépenses variables — pas de données le mois précédent'
+                  : `dépenses variables vs ${MOIS[dateMoisPrecedent.getMonth()]} (${formatEuros(totalVariablesMoisPrecedent)})`}
               </span>
             </div>
           </div>

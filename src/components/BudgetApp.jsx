@@ -62,6 +62,10 @@ export default function BudgetApp({ user, onDeconnecter }) {
   return (
     <div className="app">
       <header className="app-header">
+        <span className="brand">
+          <Icon name="account_balance_wallet" />
+          monbudget
+        </span>
         <PeriodeSwitcher periode={periode} onChange={setPeriode} />
         <button
           type="button"
