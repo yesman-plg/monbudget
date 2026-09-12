@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import Icon from './Icon'
 import GoogleIcon from './GoogleIcon'
 
 export default function LoginScreen({ onConnecter }) {
@@ -21,9 +20,11 @@ export default function LoginScreen({ onConnecter }) {
   return (
     <div className="login-screen">
       <div className="login-card">
-        <span className="app-mark app-mark-lg">
-          <Icon name="account_balance_wallet" />
-        </span>
+        <img
+          className="login-logo"
+          src={`${import.meta.env.BASE_URL}mybudget-logo.png`}
+          alt="My Budget"
+        />
         <h1>Mon budget mensuel</h1>
         <p className="login-hint">
           Connecte-toi pour retrouver ton budget sur tous tes appareils.
