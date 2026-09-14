@@ -16,7 +16,7 @@ function periodeParDefaut() {
 }
 
 export default function BudgetApp({ user, onDeconnecter }) {
-  const { data, creerSetter } = useCloudBudget(user.uid)
+  const { data, creerSetter } = useCloudBudget(user.id)
   const [etape, setEtape] = useState(0)
 
   const setRevenus = creerSetter('revenus')

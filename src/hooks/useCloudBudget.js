@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { db } from '../firebase'
+import { pb } from '../pocketbaseConfig'
 
+const COLLECTION = 'budget_budgets'
 const DELAI_ENREGISTREMENT = 600 // ms après la dernière modif avant écriture
 
 function periodeParDefaut() {
@@ -28,27 +28,48 @@ function lireDonneesLocales() {
   }
 }
 
+async function trouverBudget(uid) {
+  try {
+    return await pb.collection(COLLECTION).getFirstListItem(pb.filter('user = {:uid}', { uid }))
+  } catch (err) {
+    if (err?.status === 404) return null
+    throw err
+  }
+}
+
 /**
- * Stocke le budget dans Firestore (un document par utilisateur), avec
- * chargement initial et écriture différée (debounce) pour éviter d'écrire
- * à chaque frappe. `data` est null tant que rien n'est encore chargé.
+ * Stocke le budget dans PocketBase (un enregistrement par utilisateur, dans
+ * budget_budgets), avec chargement initial et écriture différée (debounce)
+ * pour éviter d'écrire à chaque frappe. `data` est null tant que rien n'est
+ * encore chargé.
  */
 export function useCloudBudget(uid) {
   const [data, setDataState] = useState(null)
+  const recordIdRef = useRef(null)
   const debounceRef = useRef(null)
 
   useEffect(() => {
     if (!uid) return
     let annule = false
 
-    getDoc(doc(db, 'users', uid)).then((snap) => {
+    trouverBudget(uid).then((existant) => {
       if (annule) return
-      if (snap.exists()) {
-        setDataState(snap.data())
+      if (existant) {
+        recordIdRef.current = existant.id
+        setDataState({
+          revenus: existant.revenus ?? [],
+          chargesFixes: existant.chargesFixes ?? [],
+          chargesVariables: existant.chargesVariables ?? [],
+          periode: existant.periode ?? periodeParDefaut(),
+        })
       } else {
         const initial = lireDonneesLocales()
         setDataState(initial)
-        setDoc(doc(db, 'users', uid), initial)
+        pb.collection(COLLECTION)
+          .create({ user: uid, ...initial })
+          .then((rec) => {
+            if (!annule) recordIdRef.current = rec.id
+          })
       }
     })
 
@@ -66,7 +87,9 @@ export function useCloudBudget(uid) {
         const suivant = { ...prev, [champ]: valeur }
         if (debounceRef.current) clearTimeout(debounceRef.current)
         debounceRef.current = setTimeout(() => {
-          setDoc(doc(db, 'users', uid), suivant)
+          if (recordIdRef.current) {
+            pb.collection(COLLECTION).update(recordIdRef.current, { [champ]: valeur })
+          }
         }, DELAI_ENREGISTREMENT)
         return suivant
       })
