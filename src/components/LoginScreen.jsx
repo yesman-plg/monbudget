@@ -57,7 +57,7 @@ export default function LoginScreen({ onConnecter, onCreerCompte, onRecupererCom
       <div className="login-card">
         <img
           className="login-logo"
-          src={`${import.meta.env.BASE_URL}logo-budget-2026.png`}
+          src={`${import.meta.env.BASE_URL}logo-budget-transparent.png`}
           alt="My Budget"
         />
         <h1>Mon budget mensuel</h1>
