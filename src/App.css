@@ -44,6 +44,9 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
+  background:
+    radial-gradient(circle at 14% 12%, var(--brand-lavender-bg), transparent 38%),
+    radial-gradient(circle at 86% 86%, var(--brand-coral-bg), transparent 38%);
 }
 
 .login-card {
@@ -56,14 +59,18 @@
   padding: 36px 28px;
   background: var(--surface-1);
   border: 1px solid var(--gridline);
-  border-radius: 16px;
+  border-top: 4px solid var(--brand-coral);
+  border-radius: 18px;
+  box-shadow: 0 22px 55px -38px rgba(54, 25, 90, 0.4);
 }
 
 .login-logo {
   display: block;
-  width: 76px;
-  height: 76px;
-  border-radius: 18px;
+  width: 110px;
+  height: 110px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--gridline);
 }
 
 .login-card h1 {
@@ -149,7 +156,7 @@
   border-radius: 10px;
   border: none;
   background: var(--accent);
-  color: var(--accent-fg);
+  color: var(--accent-ink);
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 0.92rem;
@@ -157,7 +164,7 @@
 }
 
 .btn-pin:hover:not(:disabled) {
-  filter: brightness(0.94);
+  background: var(--accent-hover);
 }
 
 .btn-pin:disabled {
@@ -280,14 +287,16 @@
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.92rem;
-  color: var(--text-primary);
+  color: var(--accent);
 }
 
 .brand-logo {
   display: block;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--gridline);
 }
 
 .periode-switcher {
@@ -379,7 +388,7 @@
 
 .step-indicator-item.active {
   color: var(--accent);
-  border-bottom-color: var(--accent);
+  border-bottom-color: var(--brand-coral);
 }
 
 /* --- Titres d'étape --- */
@@ -429,7 +438,7 @@
   border-radius: 10px;
   padding: 10px 14px;
   margin-bottom: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 16px rgba(54, 25, 90, 0.08);
 }
 
 .charges-overview-label {
@@ -700,7 +709,7 @@
 .charges-drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(16, 26, 46, 0.4);
+  background: rgba(29, 12, 50, 0.5);
   z-index: 20;
   display: flex;
   justify-content: flex-end;
@@ -1561,7 +1570,7 @@ input[type="number"] {
 }
 
 .stat-tile-pill-good {
-  background: rgba(28, 138, 94, 0.16);
+  background: var(--status-good-bg);
   color: var(--status-good);
 }
 
@@ -1571,16 +1580,24 @@ input[type="number"] {
 }
 
 .stat-tile-pill-critical {
-  background: rgba(192, 57, 43, 0.16);
+  background: var(--status-critical-bg);
   color: var(--status-critical);
 }
 
 .stat-tile-revenus .stat-tile-icon {
-  color: #1baf7a;
+  color: var(--brand-coral-ink);
 }
 
 .stat-tile-epargne .stat-tile-icon {
-  color: #0f9b8e;
+  color: var(--brand-lavender-ink);
+}
+
+.stat-tile-revenus {
+  border-top: 3px solid var(--brand-coral);
+}
+
+.stat-tile-epargne {
+  border-top: 3px solid var(--brand-lavender);
 }
 
 .stat-tile-good,

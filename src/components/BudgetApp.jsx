@@ -71,7 +71,7 @@ export default function BudgetApp({ user, onDeconnecter }) {
     <div className="app">
       <header className="app-header">
         <span className="brand">
-          <img className="brand-logo" src={`${import.meta.env.BASE_URL}mybudget-logo.png`} alt="" />
+          <img className="brand-logo" src={`${import.meta.env.BASE_URL}logo-budget-2026.png`} alt="" />
           monbudget
         </span>
         <PeriodeSwitcher periode={periode} onChange={setPeriode} />

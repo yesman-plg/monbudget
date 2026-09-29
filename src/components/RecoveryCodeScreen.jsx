@@ -17,7 +17,7 @@ export default function RecoveryCodeScreen({ code, onContinuer }) {
       <div className="login-card recovery-card">
         <img
           className="login-logo"
-          src={`${import.meta.env.BASE_URL}mybudget-logo.png`}
+          src={`${import.meta.env.BASE_URL}logo-budget-2026.png`}
           alt="My Budget"
         />
         <h1>Note ton code de secours</h1>
