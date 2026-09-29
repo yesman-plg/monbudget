@@ -1,32 +1,75 @@
 import { useEffect, useState } from 'react'
-import { pb, usersCollection } from '../pocketbaseConfig'
+import { appelerApi } from '../api'
 
 /**
- * État de connexion PocketBase.
+ * État de connexion de l'API homelab par pseudo et PIN.
  * user === undefined -> chargement initial
  * user === null      -> déconnecté
  * user === {...}     -> connecté
  */
 export function useAuth() {
-  const [user, setUser] = useState(pb.authStore.record ?? null)
+  const [user, setUser] = useState(undefined)
+  const [recoveryCode, setRecoveryCode] = useState(null)
 
   useEffect(() => {
-    // pb.authStore est déjà réhydraté de façon synchrone en mémoire (via
-    // localStorage) dès la création du client — l'état initial du useState
-    // ci-dessus est donc déjà correct, pas besoin de le resynchroniser ici.
-    return pb.authStore.onChange((_token, record) => {
-      setUser(record ?? null)
-    })
+    let annule = false
+    appelerApi('/me')
+      .then((compte) => {
+        if (!annule) setUser(compte)
+      })
+      .catch(() => {
+        if (!annule) setUser(null)
+      })
+    return () => {
+      annule = true
+    }
   }, [])
 
-  function connecter() {
-    return pb.collection(usersCollection).authWithOAuth2({ provider: 'google' })
+  async function connecter(identifiants) {
+    const compte = await appelerApi('/budget/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(identifiants),
+    })
+    setUser(compte)
+    return compte
   }
 
-  function deconnecter() {
-    pb.authStore.clear()
-    return Promise.resolve()
+  async function creerCompte(identifiants) {
+    const compte = await appelerApi('/budget/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(identifiants),
+    })
+    setUser(compte)
+    setRecoveryCode(compte.recoveryCode)
+    return compte
   }
 
-  return { user, connecter, deconnecter }
+  async function recupererCompte(identifiants) {
+    const compte = await appelerApi('/recover', {
+      method: 'POST',
+      body: JSON.stringify(identifiants),
+    })
+    setUser(compte)
+    setRecoveryCode(compte.recoveryCode)
+    return compte
+  }
+
+  async function deconnecter() {
+    try {
+      await appelerApi('/logout', { method: 'POST' })
+    } finally {
+      setRecoveryCode(null)
+      setUser(null)
+    }
+  }
+
+  return {
+    user,
+    recoveryCode,
+    connecter,
+    creerCompte,
+    recupererCompte,
+    deconnecter,
+    confirmerCodeSecours: () => setRecoveryCode(null),
+  }
 }

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { pb } from '../pocketbaseConfig'
+import { appelerApi } from '../api'
 
-const COLLECTION = 'budget_budgets'
 const DELAI_ENREGISTREMENT = 600 // ms après la dernière modif avant écriture
 
 function periodeParDefaut() {
@@ -28,55 +27,44 @@ function lireDonneesLocales() {
   }
 }
 
-async function trouverBudget(uid) {
-  try {
-    return await pb.collection(COLLECTION).getFirstListItem(pb.filter('user = {:uid}', { uid }))
-  } catch (err) {
-    if (err?.status === 404) return null
-    throw err
-  }
-}
-
 /**
- * Stocke le budget dans PocketBase (un enregistrement par utilisateur, dans
- * budget_budgets), avec chargement initial et écriture différée (debounce)
- * pour éviter d'écrire à chaque frappe. `data` est null tant que rien n'est
- * encore chargé.
+ * Stocke le budget dans l'API homelab (un enregistrement par utilisateur), avec
+ * chargement initial et écriture différée (debounce) pour éviter d'écrire à
+ * chaque frappe. `data` est null tant que rien n'est encore chargé.
  */
-export function useCloudBudget(uid) {
+export function useCloudBudget() {
   const [data, setDataState] = useState(null)
-  const recordIdRef = useRef(null)
+  const [erreur, setErreur] = useState(null)
   const debounceRef = useRef(null)
 
   useEffect(() => {
-    if (!uid) return
     let annule = false
 
-    trouverBudget(uid).then((existant) => {
-      if (annule) return
-      if (existant) {
-        recordIdRef.current = existant.id
-        setDataState({
-          revenus: existant.revenus ?? [],
-          chargesFixes: existant.chargesFixes ?? [],
-          chargesVariables: existant.chargesVariables ?? [],
-          periode: existant.periode ?? periodeParDefaut(),
-        })
-      } else {
+    async function charger() {
+      try {
+        const { budget } = await appelerApi('/budget')
+        if (annule) return
+        if (budget) {
+          setDataState(budget)
+          return
+        }
+
         const initial = lireDonneesLocales()
+        await appelerApi('/budget', { method: 'PUT', body: JSON.stringify({ budget: initial }) })
+        if (annule) return
         setDataState(initial)
-        pb.collection(COLLECTION)
-          .create({ user: uid, ...initial })
-          .then((rec) => {
-            if (!annule) recordIdRef.current = rec.id
-          })
+      } catch {
+        if (!annule) setErreur('Impossible de charger ce budget. Réessaie dans un instant.')
       }
-    })
+    }
+
+    charger()
 
     return () => {
       annule = true
+      if (debounceRef.current) clearTimeout(debounceRef.current)
     }
-  }, [uid])
+  }, [])
 
   // Champ par champ, avec support des mises à jour fonctionnelles
   // (ex. setChargesFixes((fixes) => fixes.map(...))) comme useState.
@@ -86,9 +74,11 @@ export function useCloudBudget(uid) {
         const valeur = typeof valeurOuFn === 'function' ? valeurOuFn(prev[champ]) : valeurOuFn
         const suivant = { ...prev, [champ]: valeur }
         if (debounceRef.current) clearTimeout(debounceRef.current)
-        debounceRef.current = setTimeout(() => {
-          if (recordIdRef.current) {
-            pb.collection(COLLECTION).update(recordIdRef.current, { [champ]: valeur })
+        debounceRef.current = setTimeout(async () => {
+          try {
+            await appelerApi('/budget', { method: 'PUT', body: JSON.stringify({ budget: suivant }) })
+          } catch {
+            setErreur('La dernière modification n’a pas pu être enregistrée.')
           }
         }, DELAI_ENREGISTREMENT)
         return suivant
@@ -96,5 +86,5 @@ export function useCloudBudget(uid) {
     }
   }
 
-  return { data, creerSetter }
+  return { data, erreur, creerSetter }
 }

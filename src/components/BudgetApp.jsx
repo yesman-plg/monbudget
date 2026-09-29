@@ -16,13 +16,21 @@ function periodeParDefaut() {
 }
 
 export default function BudgetApp({ user, onDeconnecter }) {
-  const { data, creerSetter } = useCloudBudget(user.id)
+  const { data, erreur, creerSetter } = useCloudBudget()
   const [etape, setEtape] = useState(0)
 
   const setRevenus = creerSetter('revenus')
   const setChargesFixes = creerSetter('chargesFixes')
   const setChargesVariables = creerSetter('chargesVariables')
   const setPeriode = creerSetter('periode')
+
+  if (erreur) {
+    return (
+      <div className="app">
+        <p className="chargement" role="alert">{erreur}</p>
+      </div>
+    )
+  }
 
   if (!data) {
     return (
@@ -72,7 +80,7 @@ export default function BudgetApp({ user, onDeconnecter }) {
           className="btn-compte"
           onClick={onDeconnecter}
           aria-label="Se déconnecter"
-          title={user.email ?? 'Se déconnecter'}
+          title={user.pseudo ?? 'Se déconnecter'}
         >
           {user.photoURL ? (
             <img src={user.photoURL} alt="" className="avatar" referrerPolicy="no-referrer" />
