@@ -59,7 +59,6 @@
   padding: 36px 28px;
   background: var(--surface-1);
   border: 1px solid var(--gridline);
-  border-top: 4px solid var(--brand-coral);
   border-radius: 18px;
   box-shadow: 0 22px 55px -38px rgba(54, 25, 90, 0.4);
 }
